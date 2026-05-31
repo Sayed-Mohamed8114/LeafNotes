@@ -1,0 +1,1 @@
+to get the access random token you will use ->  node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
