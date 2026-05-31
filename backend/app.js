@@ -153,4 +153,21 @@ app.post("/add-note",authenticationToken, async (req, res) => {
   }
 });
 
-
+// edit note 
+app.put("/edit-note/:noteId",authenticationToken,async (req,res)=>{
+    const {title,content,tags,isPinned} = req.body;
+    const noteId = req.params.noteId; 
+    const userId = req.user.userId;
+    try {
+        const note = await Note.findOne({_id : noteId , userId})
+        if (!note){return res.status(404).json({error:true,message:"note not found"})};
+        if (title) note.title = title;
+        if (content) note.content = content; 
+        if (tags) note.tags = tage ; 
+        if (typeof isPinned === "boolean") note.isPinned = isPinned;
+        await note.save();
+        return res.json({error:false,message:"note updated successfully"});
+    } catch (error) {
+        return res.status(500).json({ error: true, message: "server error" });
+    }
+})
