@@ -100,14 +100,12 @@ app.post("/sign-in", async (req, res) => {
         expiresIn: "3600m",
       },
     );
-    return res
-      .status(200)
-      .json({
-        error: false,
-        message: "login successfully",
-        email,
-        accessToken,
-      });
+    return res.status(200).json({
+      error: false,
+      message: "login successfully",
+      email,
+      accessToken,
+    });
   } catch (error) {
     return res.status(500).json({ error: true, message: "server error" });
   }
@@ -130,6 +128,29 @@ app.get("/get-user", authenticationToken, async (req, res) => {
       message: "",
     });
   } catch (error) {
-    return res.status(500).json({error:true,message:"server error"});
+    return res.status(500).json({ error: true, message: "server error" });
   }
 });
+
+//add note
+app.post("/add-note",authenticationToken, async (req, res) => {
+  const { title, content, tags } = req.body;
+  const userID = req.user.userId;
+
+  if (!title || !content) {
+    return res
+      .status(400)
+      .json({ error: true, message: "title and content are required" });
+  }
+
+  try {
+    const note = new Note({ title, content, tags: tags || [], userID });
+    note.save();
+
+    return res.json({ erro: false, message: "nore added successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: true, message: "server error" });
+  }
+});
+
+
