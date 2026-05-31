@@ -177,7 +177,9 @@ app.put("/edit-note/:noteId", authenticationToken, async (req, res) => {
 // get all notes
 app.get("/getAll-notes", authenticationToken, async (req, res) => {
   try {
-    const notes= Note.find({userId:req.user.userId}).sort({isPinned:-1});
+    const notes = await Note.find({ userId: req.user.userId }).sort({
+      isPinned: -1,
+    });
     return res.json({ error: false, message: "all notes retrived" });
   } catch (error) {
     return res.status(500).json({ error: true, message: "server error" });
@@ -185,3 +187,16 @@ app.get("/getAll-notes", authenticationToken, async (req, res) => {
 });
 
 // delete note
+app.delete("/delete-note/:noteId", authenticationToken, async (req, res) => {
+  const noteId = req.params.noteId;
+  const userId = req.user.userId;
+  try {
+    const note = await Note.findOne({ _id: noteId, userId });
+    if (!note)
+      return res.status(404).json({ error: true, message: "note not founded" });
+    await Note.deleteOne({ _id: noteId });
+    return res.json({ error: false, message: "note deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: true, message: "server error" });
+  }
+});
