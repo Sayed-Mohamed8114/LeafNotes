@@ -133,7 +133,7 @@ app.get("/get-user", authenticationToken, async (req, res) => {
 });
 
 //add note
-app.post("/add-note",authenticationToken, async (req, res) => {
+app.post("/add-note", authenticationToken, async (req, res) => {
   const { title, content, tags } = req.body;
   const userID = req.user.userId;
 
@@ -153,21 +153,35 @@ app.post("/add-note",authenticationToken, async (req, res) => {
   }
 });
 
-// edit note 
-app.put("/edit-note/:noteId",authenticationToken,async (req,res)=>{
-    const {title,content,tags,isPinned} = req.body;
-    const noteId = req.params.noteId; 
-    const userId = req.user.userId;
-    try {
-        const note = await Note.findOne({_id : noteId , userId})
-        if (!note){return res.status(404).json({error:true,message:"note not found"})};
-        if (title) note.title = title;
-        if (content) note.content = content; 
-        if (tags) note.tags = tage ; 
-        if (typeof isPinned === "boolean") note.isPinned = isPinned;
-        await note.save();
-        return res.json({error:false,message:"note updated successfully"});
-    } catch (error) {
-        return res.status(500).json({ error: true, message: "server error" });
+// edit note
+app.put("/edit-note/:noteId", authenticationToken, async (req, res) => {
+  const { title, content, tags, isPinned } = req.body;
+  const noteId = req.params.noteId;
+  const userId = req.user.userId;
+  try {
+    const note = await Note.findOne({ _id: noteId, userId });
+    if (!note) {
+      return res.status(404).json({ error: true, message: "note not found" });
     }
-})
+    if (title) note.title = title;
+    if (content) note.content = content;
+    if (tags) note.tags = tage;
+    if (typeof isPinned === "boolean") note.isPinned = isPinned;
+    await note.save();
+    return res.json({ error: false, message: "note updated successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: true, message: "server error" });
+  }
+});
+
+// get all notes
+app.get("/getAll-notes", authenticationToken, async (req, res) => {
+  try {
+    const notes= Note.find({userId:req.user.userId}).sort({isPinned:-1});
+    return res.json({ error: false, message: "all notes retrived" });
+  } catch (error) {
+    return res.status(500).json({ error: true, message: "server error" });
+  }
+});
+
+// delete note
