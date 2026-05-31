@@ -101,7 +101,7 @@ app.post("/sign-in", async (req, res) => {
       },
     );
     return res
-      .status(201)
+      .status(200)
       .json({
         error: false,
         message: "login successfully",
@@ -109,7 +109,7 @@ app.post("/sign-in", async (req, res) => {
         accessToken,
       });
   } catch (error) {
-    return res.status(500).josn({ error: true, message: "server error" });
+    return res.status(500).json({ error: true, message: "server error" });
   }
 });
 
@@ -122,7 +122,7 @@ app.get("/get-user", authenticationToken, async (req, res) => {
     }
     return res.json({
       user: {
-        fullname: user.fullname,
+        fullName: user.fullName,
         email: user.email,
         _id: user._id,
         createdOn: user.createdOn,
