@@ -201,21 +201,49 @@ app.delete("/delete-note/:noteId", authenticationToken, async (req, res) => {
   }
 });
 
-//update is pinned 
-app.put("/update-note-pinned/:noteId",authenticationToken,async (req,res)=>{
-  const noteid = req.params.body;
-  const {isPinned} = req.body; 
-  const userId = req.user.userID; 
+//update is pinned
+app.put(
+  "/update-note-pinned/:noteId",
+  authenticationToken,
+  async (req, res) => {
+    const noteid = req.params.body;
+    const { isPinned } = req.body;
+    const userId = req.user.userID;
+
+    try {
+      const note = await Note.findOne({ _id: noteid, userId });
+      if (!note) {
+        return res
+          .status(404)
+          .json({ error: true, message: "can't find this note to be updated" });
+      }
+      note.isPinned == !!isPinned;
+      await note.save();
+      return res.json({ error: false, message: "note updated successfully" });
+    } catch (error) {
+      return res.status(500).json({ error: true, message: "server error" });
+    }
+  },
+);
+
+// search note
+app.get("/search-note", authenticationToken, async (req, res) => {
+  const query = req.body;
+  const userId = req.user.userId;
+  if (!query)
+    return res.status(404).json({ error: true, message: "query is required" });
 
   try {
-    const note = await Note.findOne({_id:noteid,userId});
-    if(!note){
-      return res.status(404).json({error:true,message:"can't find this note to be updated"});
-    }
-    note.isPinned == !!isPinned;
-    await note.save();
-    return res.json({error:false,message:"note updated successfully"});
+    const notes = await Note.find({
+      userId,
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { content: { $regex: query, $options: "i" } },
+      ],
+    });
+    return res.json({ error: false, message: "matching note founded" });
   } catch (error) {
-       return res.status(500).json({ error: true, message: "server error" });
+    return res.status(500).json({ error: true, message: "server error" });
   }
-})
+});
+
