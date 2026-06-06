@@ -135,7 +135,7 @@ app.get("/get-user", authenticationToken, async (req, res) => {
 //add note
 app.post("/add-note", authenticationToken, async (req, res) => {
   const { title, content, tags } = req.body;
-  const userID = req.user.userId;
+  const userId = req.user.userId;
 
   if (!title || !content) {
     return res
@@ -144,8 +144,8 @@ app.post("/add-note", authenticationToken, async (req, res) => {
   }
 
   try {
-    const note = new Note({ title, content, tags: tags || [], userID });
-    note.save();
+    const note = new Note({ title, content, tags: tags || [], userId });
+    await note.save();
 
     return res.json({ erro: false, message: "nore added successfully" });
   } catch (error) {
@@ -165,7 +165,7 @@ app.put("/edit-note/:noteId", authenticationToken, async (req, res) => {
     }
     if (title) note.title = title;
     if (content) note.content = content;
-    if (tags) note.tags = tage;
+    if (tags) note.tags = tags;
     if (typeof isPinned === "boolean") note.isPinned = isPinned;
     await note.save();
     return res.json({ error: false, message: "note updated successfully" });
@@ -180,7 +180,7 @@ app.get("/getAll-notes", authenticationToken, async (req, res) => {
     const notes = await Note.find({ userId: req.user.userId }).sort({
       isPinned: -1,
     });
-    return res.json({ error: false, message: "all notes retrived" });
+    return res.json({ error: false, notes });
   } catch (error) {
     return res.status(500).json({ error: true, message: "server error" });
   }
@@ -206,7 +206,7 @@ app.put(
   "/update-note-pinned/:noteId",
   authenticationToken,
   async (req, res) => {
-    const noteid = req.params.body;
+    const noteid = req.params.noteId;
     const { isPinned } = req.body;
     const userId = req.user.userID;
 
@@ -217,7 +217,7 @@ app.put(
           .status(404)
           .json({ error: true, message: "can't find this note to be updated" });
       }
-      note.isPinned == !!isPinned;
+      note.isPinned = !!isPinned;
       await note.save();
       return res.json({ error: false, message: "note updated successfully" });
     } catch (error) {
@@ -228,7 +228,7 @@ app.put(
 
 // search note
 app.get("/search-note", authenticationToken, async (req, res) => {
-  const query = req.body;
+  const query = req.query.q;
   const userId = req.user.userId;
   if (!query)
     return res.status(404).json({ error: true, message: "query is required" });
