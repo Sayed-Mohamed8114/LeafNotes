@@ -200,3 +200,22 @@ app.delete("/delete-note/:noteId", authenticationToken, async (req, res) => {
     return res.status(500).json({ error: true, message: "server error" });
   }
 });
+
+//update is pinned 
+app.put("/update-note-pinned/:noteId",authenticationToken,async (req,res)=>{
+  const noteid = req.params.body;
+  const {isPinned} = req.body; 
+  const userId = req.user.userID; 
+
+  try {
+    const note = await Note.findOne({_id:noteid,userId});
+    if(!note){
+      return res.status(404).json({error:true,message:"can't find this note to be updated"});
+    }
+    note.isPinned == !!isPinned;
+    await note.save();
+    return res.json({error:false,message:"note updated successfully"});
+  } catch (error) {
+       return res.status(500).json({ error: true, message: "server error" });
+  }
+})
