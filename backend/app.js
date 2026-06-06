@@ -208,7 +208,7 @@ app.put(
   async (req, res) => {
     const noteid = req.params.noteId;
     const { isPinned } = req.body;
-    const userId = req.user.userID;
+    const userId = req.user.userId;
 
     try {
       const note = await Note.findOne({ _id: noteid, userId });
