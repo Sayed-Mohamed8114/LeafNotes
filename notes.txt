@@ -1,3 +1,4 @@
 1- to get the access random token you will use ->  node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 2- tested the api with post man (first deal with it actually)
 3- gave the allowed origin -> const allowedOrigin = ["http://localhost:5173"]; to make it easier to connect with the frontend
+4- started with the front by install (uiverse library for some helper components - react icons for icons)
