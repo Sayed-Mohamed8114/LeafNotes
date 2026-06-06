@@ -247,3 +247,11 @@ app.get("/search-note", authenticationToken, async (req, res) => {
   }
 });
 
+// start the server 
+const Port = process.env.PORT; 
+connectDB().then(()=>{
+  app.listen(Port,()=>{
+    console.log(`app is running on http://localhost:${Port}`);
+  });
+});
+export default app; 
