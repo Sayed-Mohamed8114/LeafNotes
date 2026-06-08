@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 const Loader = () => {
   return (
-    <StyledWrapper>
-      <div className="loader">
+    <StyledWrapper className="w-full h-screen flex items-center justify-center bg-linear-to-r from-slate-700 to-slate-400">
+      <div className="loader ">
         <svg className="legl" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20.69332" height="68.19944" viewBox="0,0,20.69332,68.19944">
           <g transform="translate(-201.44063,-235.75466)">
             <g strokeMiterlimit={10}>

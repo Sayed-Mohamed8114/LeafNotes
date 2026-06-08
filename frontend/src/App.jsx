@@ -1,8 +1,8 @@
-import Card from "./components/Cards/NoteCard";
+import Signup from "./pages/SignUp/SignUp";
 
 function App() {
   return <>
-  <Card title={"note1"} content1={"the main content"} />
+  <Signup/>
   </>;
 }
 
