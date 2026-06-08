@@ -2,3 +2,10 @@
 2- tested the api with post man (first deal with it actually)
 3- gave the allowed origin -> const allowedOrigin = ["http://localhost:5173"]; to make it easier to connect with the frontend
 4- started with the front by install (uiverse library for some helper components - react icons for icons)
+5- axios -> ti send http erequest to the api 
+6- framer motion -> to make animations in react  
+7- reat-dom -> to connect react with dom 
+8- moment-timezone -> to deal with the dates and timezones
+9- react-hot-toast -> make the notifications 
+10- react-modal -> to make a popup windows 
+11- react-router-dom -> to navigate between routes  
