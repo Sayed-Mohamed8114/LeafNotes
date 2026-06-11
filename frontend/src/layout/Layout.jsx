@@ -33,7 +33,7 @@ const Layout = () => {
 
         <Navbar />
 
-        <main className="flex-1 flex flex-col">
+        <main className="flex-1 flex flex-col w-full justify-center items-center">
           <Outlet />
         </main>
 

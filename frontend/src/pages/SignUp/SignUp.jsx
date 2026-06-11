@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { validateEmail } from "../../utils/helper.js";
 import axiosInstance from "../../utils/axiosinstance.js";
+import Loader from "@/components/ui/Loader.jsx";
 const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,81 +33,105 @@ const Signup = () => {
     setError("");
     setIsLoading(true);
 
-    setTimeout(async() => {
-       try {
-      const response = await axiosInstance.post("/create-account", {
-        fullName: fullName,
-        email: email,
-        password: password,
-        profileImageUrl: "",
-      });
-      if (response.data && response.data.accessToken) {
-        localStorage.setItem("token", response.data.accessToken);
-        navigate("/dashboard");
+    setTimeout(async () => {
+      try {
+        const response = await axiosInstance.post("/create-account", {
+          fullName: fullName,
+          email: email,
+          password: password,
+          profileImageUrl: "",
+        });
+        if (response.data && response.data.accessToken) {
+          localStorage.setItem("token", response.data.accessToken);
+          navigate("/dashboard");
+        }
+      } catch (error) {
+        if (error.response.data?.message) {
+          setError(error.response.data.message);
+        } else {
+          setError("something went wrong please try again later");
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      if (error.response.data?.message) {
-        setError(error.response.data.message);
-      } else {
-        setError("something went wrong please try again later");
-      }
-    } finally {
-      setIsLoading(false);
-    }
     }, 2000);
-   
   };
-  return (
-    <StyledWrapper>
-      <form className="form" onSubmit={handleSignUp}>
-        <p className="title text-2xl text-teal-700 font-bold leading-1 relative flex items-center p-7">Register </p>
-        <p className="message">Signup now to start use our app. </p>
-        <label>
-          <input
-            placeholder="Full Name"
-            type="text"
-            className="input"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            aria-label="Full Name"
-          />
-        </label>
-        <label>
-          <input
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            className="input"
-            aria-label="Email"
-          />
-        </label>
-        <label>
-          <input
-            placeholder="Password"
-            type="password"
-            className="input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            aria-label="password"
-          />
-        </label>
 
-        {
-          error && (
+  const handleSignIn = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
+  };
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  return (
+    <>
+    {isLoading && <Loader/>}
+      <StyledWrapper className="w-[40%]">
+        <form className="form bg-linear-to-b from-slate-300 via-teal-100 to-teal-200 w-full" onSubmit={handleSignUp}>
+          <p className="title text-2xl text-teal-700 font-bold leading-1 relative flex items-center p-7">
+            Register{" "}
+          </p>
+          <p className="message">Signup now to start use our app. </p>
+          <label>
+            <input
+              placeholder="Full Name"
+              type="text"
+              className="input"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              aria-label="Full Name"
+            />
+          </label>
+          <label>
+            <input
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              className="input"
+              aria-label="Email"
+            />
+          </label>
+          <label>
+            <input
+              placeholder="Password"
+              type="password"
+              className="input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              aria-label="password"
+            />
+          </label>
+
+          {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-2">
               <p className="text-red-600 text-sm">{error}</p>
             </div>
-          )
-        }
+          )}
 
-        <button className="bg-teal-700 p-2.5 rounded-[10px] text-teal-100 font-bold transition duration-300  ease-in-out hover:bg-teal-900 cursor-pointer" type="submit" >Sign up</button>
-        
-        <p className="text-sm items-center text-gray-600" >
-          Already have an acount ?{" "} <Link to="/login" className="text-teal-700 hover:underline hover:text-teal-900">Signin</Link>{" "}
-        </p>
-      </form>
-    </StyledWrapper>
+          <button
+            className="bg-teal-700 p-2.5 rounded-[10px] text-teal-100 font-bold transition duration-300  ease-in-out hover:bg-teal-900 cursor-pointer"
+            type="submit"
+          >
+            Sign up
+          </button>
+
+          <p className="text-sm items-center text-gray-600">
+            Already have an acount ?{" "}
+            <button
+              className="text-teal-700 hover:underline hover:text-teal-900"
+              onClick={handleSignIn}
+            >
+              Signin
+            </button>{" "}
+          </p>
+        </form>
+      </StyledWrapper>
+    </>
   );
 };
 
@@ -115,14 +140,10 @@ const StyledWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-width: 350px;
-    background-color: #fff;
     padding: 20px;
     border-radius: 20px;
     position: relative;
   }
-
-
 
   .title::before,
   .title::after {
@@ -152,7 +173,6 @@ const StyledWrapper = styled.div`
     color: rgba(88, 87, 87, 0.822);
     font-size: 14px;
   }
-
 
   .flex {
     display: flex;
@@ -185,6 +205,7 @@ const StyledWrapper = styled.div`
   .form label .input:placeholder-shown + span {
     top: 15px;
     font-size: 0.9em;
+
   }
 
   .form label .input:focus + span,
