@@ -1,0 +1,115 @@
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.so
+
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+.mypy_cache/
+.ruff_cache/
+
+.venv/
+venv/
+env/
+ENV/
+
+
+# FastAPI / Backend
+
+*.log
+
+# Local SQLite databases (if used during development)
+*.db
+*.sqlite
+*.sqlite3
+
+
+# Node / React
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+.npm/
+.yarn/
+.pnpm-store/
+
+dist/
+build/
+
+# Vite
+.vite/
+
+# Environment files
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+
+# IDE / Editors
+
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+
+.idea/
+*.iml
+
+*.swp
+*.swo
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Testing / Coverage
+
+coverage/
+.nyc_output/
+
+# Temporary Files
+*.tmp
+*.temp
+*.bak
+*.cache
+
+# Secrets / Certificates
+*.pem
+*.key
+*.crt
+# Python Environment Files
+*.env
