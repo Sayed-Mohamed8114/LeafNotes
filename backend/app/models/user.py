@@ -1,6 +1,9 @@
-from database.base import Base 
+from app.database.base import Base 
 from sqlalchemy.orm import Mapped , mapped_column , relationship 
-from models.todo import Todo
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from app.models.todo import Todo
+
 
 class User(Base):
     __tablename__ = "users"

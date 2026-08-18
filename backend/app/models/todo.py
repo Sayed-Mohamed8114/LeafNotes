@@ -1,8 +1,12 @@
-from database.base import Base 
+from app.database.base import Base 
 from datetime import datetime
 from sqlalchemy import DateTime ,ForeignKey
 from sqlalchemy.orm import Mapped , mapped_column ,relationship
-from models.user import User
+# this will make the import only in the ide and not during run the project 
+from typing import TYPE_CHECKING 
+
+if TYPE_CHECKING:
+    from app.models.user import User
 
 class Todo(Base):
     __tablename__ = "todos"
