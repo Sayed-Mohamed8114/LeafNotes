@@ -1,4 +1,4 @@
-from pydantic import BaseModel 
+from pydantic import BaseModel ,ConfigDict
 from datetime import datetime
 
 class TodoCreate(BaseModel):
@@ -12,6 +12,8 @@ class TodoResponse(BaseModel):
     description: str | None = None 
     due_date : datetime | None = None 
     completed : bool 
+
+    model_config = ConfigDict(from_attributes=True)
 
 class TodoUpdate(BaseModel):
     title:str | None = None
