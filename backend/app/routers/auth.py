@@ -1,9 +1,10 @@
 from fastapi import APIRouter,Depends,HTTPException, status
 from app.schemas.user import UserResponse , UserCreate , UserLogin
-from app.core.security import hash_password
+from app.core.security import hash_password ,verify_password ,create_access_token
 from app.models.user import User 
 from app.database.session import get_db
 from sqlalchemy.orm import Session
+from app.schemas.auth import Token
 
 
 router = APIRouter(
@@ -12,7 +13,7 @@ router = APIRouter(
 )
 
 
-@router.post("/regiester",response_model=UserResponse,status_code=status.HTTP_201_CREATED)
+@router.post("/register",response_model=UserResponse,status_code=status.HTTP_201_CREATED)
 def regiester_user(user_data:UserCreate, db:Session = Depends(get_db)):
     exiting_email = db.query(User).filter(
         User.email == user_data.email
@@ -35,6 +36,25 @@ def regiester_user(user_data:UserCreate, db:Session = Depends(get_db)):
 
     return new_user
 
-@router.post("/login" , response_model=UserResponse , status_code=status.HTTP_200_OK)
+@router.post("/login" , response_model=Token , status_code=status.HTTP_200_OK)
 def login_user(user_data:UserLogin , db : Session = Depends(get_db)):
-    pass 
+    user = db.query(User).filter(
+        User.email == user_data.email
+    ).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="invalid email or password"
+        )
+    
+    valid = verify_password(user_data.password , user.password_hash)
+    if not valid :
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="invalid email or password"
+        )
+    access_token = create_access_token(data={"sub":str(user.id)})
+    return {
+        "access_token":access_token,
+        "token_type":"bearer"
+    }
