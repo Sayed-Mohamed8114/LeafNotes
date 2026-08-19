@@ -15,9 +15,9 @@ SessionLocal = sessionmaker(
 )
 
 def get_db():
-    db =SessionLocal 
+    db =SessionLocal()
     try:
         # yield is saying take the value and i may continue later but if we user return there is no later
         yield db 
     finally:
-        db.close 
+        db.close()
