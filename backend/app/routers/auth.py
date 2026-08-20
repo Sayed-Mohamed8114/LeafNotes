@@ -6,12 +6,10 @@ from app.database.session import get_db
 from sqlalchemy.orm import Session
 from app.schemas.auth import Token
 
-
 router = APIRouter(
     prefix="/auth",
     tags=["authentication"]
 )
-
 
 @router.post("/register",response_model=UserResponse,status_code=status.HTTP_201_CREATED)
 def regiester_user(user_data:UserCreate, db:Session = Depends(get_db)):
