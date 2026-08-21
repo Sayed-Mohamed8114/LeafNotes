@@ -5,6 +5,7 @@ from app.models.user import User
 from app.database.session import get_db
 from sqlalchemy.orm import Session
 from app.schemas.auth import Token
+from app.dependencies.get_current_user import get_current_user
 
 router = APIRouter(
     prefix="/auth",
@@ -56,3 +57,8 @@ def login_user(user_data:UserLogin , db : Session = Depends(get_db)):
         "access_token":access_token,
         "token_type":"bearer"
     }
+
+
+@router.get("/auth/me" , response_model=UserResponse)
+def get_me(current_user : User = Depends(get_current_user)):
+    return current_user 
