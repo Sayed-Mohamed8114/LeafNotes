@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.todo import Todo
-from app.schemas.todo import TodoCreate
+from app.schemas.todo import TodoCreate , TodoUpdate
 from fastapi import HTTPException,status
 
 def get_todos(db:Session , user_id:int):
@@ -30,3 +30,26 @@ def get_one_todo_based_on_id(db: Session , user_id:int , todo_id:int):
             detail="Todo not found"
         )
     return todo
+
+def delete_todo():
+    pass 
+
+def edit_todo(db: Session , user_id:int , todo_data:TodoUpdate,  todo_id:int):
+    todo = db.query(Todo).filter(
+        Todo.user_id == user_id , Todo.id == todo_id
+    ).first()
+    if todo is None:
+        raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Todo not found"
+        )
+    update_data = todo_data.model_dump(exclude_unset = True)
+    for field , value in update_data.items():
+        setattr(todo,field,value)
+
+    db.commit()
+    db.refresh(todo)
+    return todo
+
+
+    

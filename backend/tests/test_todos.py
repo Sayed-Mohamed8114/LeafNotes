@@ -305,3 +305,167 @@ def test_user_cannot_get_another_user_todo(client):
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Todo not found"
+
+def test_update_todo(client):
+    user = client.post(
+        "/auth/register",
+        json={
+            "name": "sayed",
+            "email": "update@example.com",
+            "password": "test1111"
+        }
+    )
+
+    assert user.status_code == 201
+
+    login = client.post(
+        "/auth/login",
+        json={
+            "email": "update@example.com",
+            "password": "test1111"
+        }
+    )
+
+    assert login.status_code == 200
+
+    token = login.json()["access_token"]
+    todo_response = client.post(
+        "/todos",
+        json={
+            "title": "Old Title",
+            "description": "Old Description"
+        },
+        headers={
+            "Authorization": f"Bearer {token}"
+        }
+    )
+    assert todo_response.status_code == 201
+    todo_id = todo_response.json()["id"]
+    response = client.patch(
+        f"/todos/{todo_id}",
+        json={
+            "title":"New Title",
+            "completed":True
+        },
+        headers={
+            "Authorization": f"Bearer {token}"
+        }
+    )
+    assert response.status_code == 200 
+    data = response.json()
+    assert data["id"] == todo_id
+    assert data["title"] == "New Title"
+    assert data["description"] == "Old Description"
+    assert data["completed"] is True
+
+def test_update_nonexistent_todo(client):
+    user = client.post(
+        "/auth/register",
+        json={
+            "name": "sayed",
+            "email": "update404@example.com",
+            "password": "test1111"
+        }
+    )
+
+    assert user.status_code == 201
+
+    login = client.post(
+        "/auth/login",
+        json={
+            "email": "update404@example.com",
+            "password": "test1111"
+        }
+    )
+
+    assert login.status_code == 200
+
+    token = login.json()["access_token"]
+
+    response = client.patch(
+        "/todos/999999",
+        json={
+            "title": "Trying to update"
+        },
+        headers={
+            "Authorization": f"Bearer {token}"
+        }
+    )
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Todo not found"
+
+def test_user_cannot_update_another_user_todo(client):
+    user_a = client.post(
+        "/auth/register",
+        json={
+            "name": "User A",
+            "email": "updateusera@example.com",
+            "password": "test1111"
+        }
+    )
+
+    assert user_a.status_code == 201
+
+    login_a = client.post(
+        "/auth/login",
+        json={
+            "email": "updateusera@example.com",
+            "password": "test1111"
+        }
+    )
+
+    assert login_a.status_code == 200
+
+    token_a = login_a.json()["access_token"]
+
+    todo_response = client.post(
+        "/todos",
+        json={
+            "title": "User A Todo",
+            "description": "Private Todo"
+        },
+        headers={
+            "Authorization": f"Bearer {token_a}"
+        }
+    )
+
+    assert todo_response.status_code == 201
+
+    todo_id = todo_response.json()["id"]
+
+    user_b = client.post(
+        "/auth/register",
+        json={
+            "name": "User B",
+            "email": "updateuserb@example.com",
+            "password": "test2222"
+        }
+    )
+
+    assert user_b.status_code == 201
+
+    login_b = client.post(
+        "/auth/login",
+        json={
+            "email": "updateuserb@example.com",
+            "password": "test2222"
+        }
+    )
+
+    assert login_b.status_code == 200
+
+    token_b = login_b.json()["access_token"]
+
+    response = client.patch(
+        f"/todos/{todo_id}",
+        json={
+            "title": "Hacked Title"
+        },
+        headers={
+            "Authorization": f"Bearer {token_b}"
+        }
+    )
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Todo not found"
