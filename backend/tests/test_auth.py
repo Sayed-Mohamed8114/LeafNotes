@@ -108,7 +108,6 @@ def test_get_current_user(client):
     assert data["name"] == "Sayed"
     assert data["email"] == "me@example.com"
 
-
 def test_get_current_user_without_token(client):
     response = client.get("/auth/me")
     assert response.status_code == 401
