@@ -7,7 +7,6 @@ def get_todos(db:Session , user_id:int):
         Todo.user_id == user_id
     ).all()
 
-
 def create_todo(db: Session , todo_data :TodoCreate , user_id:int):
     todo = Todo(
         title=todo_data.title ,
@@ -19,5 +18,3 @@ def create_todo(db: Session , todo_data :TodoCreate , user_id:int):
     db.commit()
     db.refresh(todo)
     return todo 
-
-
