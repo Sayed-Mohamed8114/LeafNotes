@@ -31,9 +31,6 @@ def get_one_todo_based_on_id(db: Session , user_id:int , todo_id:int):
         )
     return todo
 
-def delete_todo():
-    pass 
-
 def edit_todo(db: Session , user_id:int , todo_data:TodoUpdate,  todo_id:int):
     todo = db.query(Todo).filter(
         Todo.user_id == user_id , Todo.id == todo_id
@@ -51,5 +48,18 @@ def edit_todo(db: Session , user_id:int , todo_data:TodoUpdate,  todo_id:int):
     db.refresh(todo)
     return todo
 
+def remove_todo(db: Session , user_id:int,   todo_id : int):
+    todo = db.query(Todo).filter(
+        Todo.id == todo_id , Todo.user_id == user_id
+    ).first()
 
+    if todo is None:
+        raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Todo not found"
+            )
+    db.delete(todo)
+    db.commit()
+    return None
+     
     

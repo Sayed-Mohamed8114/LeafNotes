@@ -1,6 +1,6 @@
 from fastapi import APIRouter ,status , Depends
 from app.schemas.todo import TodoResponse , TodoCreate , TodoUpdate
-from app.crud.todo import get_todos , create_todo , get_one_todo_based_on_id , edit_todo
+from app.crud.todo import get_todos , create_todo , get_one_todo_based_on_id , edit_todo , remove_todo
 from app.models.user import User
 from sqlalchemy.orm import Session
 from app.database.session import get_db
@@ -26,4 +26,9 @@ def get_todo_with_id(todo_id:int ,db: Session = Depends(get_db) , current_user :
 @router.patch("/{todo_id}",response_model=TodoResponse , status_code=status.HTTP_200_OK)
 def update_todo(todo_data:TodoUpdate , todo_id:int, db: Session = Depends(get_db) , current_user:User =Depends(get_current_user)):
     return edit_todo(db , current_user.id , todo_data , todo_id)
+
+@router.delete("/{todo_id}" ,status_code=status.HTTP_204_NO_CONTENT)
+def delete_todo(todo_id:int , current_user:User= Depends(get_current_user), db: Session = Depends(get_db)):
+    remove_todo(db,current_user.id , todo_id)
+    return None
     

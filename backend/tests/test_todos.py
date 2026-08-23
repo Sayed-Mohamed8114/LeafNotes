@@ -469,3 +469,149 @@ def test_user_cannot_update_another_user_todo(client):
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Todo not found"
+
+
+def test_delete_todo(client):
+    user = client.post(
+        "/auth/register",
+        json={
+            "name": "delete user",
+            "email": "delete@example.com",
+            "password": "test1111"
+        }
+    )
+
+    login = client.post(
+        "/auth/login",
+        json={
+            "email": "delete@example.com",
+            "password": "test1111"
+        }
+    )
+
+    token = login.json()["access_token"]
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    todo = client.post(
+        "/todos/",
+        json={
+            "title": "Todo to delete",
+            "description": "This todo will be deleted"
+        },
+        headers=headers
+    )
+
+    assert todo.status_code == 201
+
+    todo_id = todo.json()["id"]
+
+    response = client.delete(
+        f"/todos/{todo_id}",
+        headers=headers
+    )
+
+    assert response.status_code == 204
+
+
+def test_delete_nonexistent_todo(client):
+    user = client.post(
+        "/auth/register",
+        json={
+            "name": "delete missing",
+            "email": "deletemissing@example.com",
+            "password": "test1111"
+        }
+    )
+
+    login = client.post(
+        "/auth/login",
+        json={
+            "email": "deletemissing@example.com",
+            "password": "test1111"
+        }
+    )
+
+    token = login.json()["access_token"]
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    response = client.delete(
+        "/todos/999999",
+        headers=headers
+    )
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Todo not found"
+
+
+def test_user_cannot_delete_another_users_todo(client):
+    user1 = client.post(
+        "/auth/register",
+        json={
+            "name": "user one",
+            "email": "userone@example.com",
+            "password": "test1111"
+        }
+    )
+
+    login1 = client.post(
+        "/auth/login",
+        json={
+            "email": "userone@example.com",
+            "password": "test1111"
+        }
+    )
+
+    token1 = login1.json()["access_token"]
+
+    headers1 = {
+        "Authorization": f"Bearer {token1}"
+    }
+
+    todo = client.post(
+        "/todos/",
+        json={
+            "title": "User 1 todo",
+            "description": "This belongs to user 1"
+        },
+        headers=headers1
+    )
+
+    assert todo.status_code == 201
+
+    todo_id = todo.json()["id"]
+
+    user2 = client.post(
+        "/auth/register",
+        json={
+            "name": "user two",
+            "email": "usertwo@example.com",
+            "password": "test1111"
+        }
+    )
+
+    login2 = client.post(
+        "/auth/login",
+        json={
+            "email": "usertwo@example.com",
+            "password": "test1111"
+        }
+    )
+
+    token2 = login2.json()["access_token"]
+
+    headers2 = {
+        "Authorization": f"Bearer {token2}"
+    }
+    response = client.delete(
+        f"/todos/{todo_id}",
+        headers=headers2
+    )
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Todo not found"
