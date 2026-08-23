@@ -13,11 +13,11 @@ router = APIRouter(
 )
 
 @router.post("/register",response_model=UserResponse,status_code=status.HTTP_201_CREATED)
-def regiester_user(user_data:UserCreate, db:Session = Depends(get_db)):
-    exiting_email = db.query(User).filter(
+def register_user(user_data:UserCreate, db:Session = Depends(get_db)):
+    existing_email = db.query(User).filter(
         User.email == user_data.email
     ).first()
-    if exiting_email:
+    if existing_email:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT ,
             detail= "Email already regiestered"
