@@ -10,9 +10,9 @@ export default function AppRouter() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Landing />} />
-          <Route path={"/login"} element={<LoginPage />} />
           <Route path={"/register"} element={<Register />} />
         </Route>
+        <Route path={"/login"} element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
   );

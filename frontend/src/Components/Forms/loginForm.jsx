@@ -1,27 +1,87 @@
-import styled from 'styled-components';
+import { useAuth } from "@/Context/AurhContext";
+import { login } from "@/Services/User";
+import { useState } from "react";
+import styled from "styled-components";
 
-const loginForm = () => {
+const LoginForm = () => {
+  const { login: saveToken } = useAuth();
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await login(userData);
+      console.log(response);
+      saveToken(response.access_token);
+      setUserData({
+        email: "",
+        password: "",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <StyledWrapper>
-      <form className="form">
-        <p>Login</p>
+    <StyledWrapper className="h-full w-[50%] p-0 m-0">
+      <form
+        className="form
+      px-20 py-10 rounded-2xl mt-5  h-full
+      "
+        onSubmit={handleLogin}
+      >
+        <p className="font-['Black_Ops_One'] mb-10 text-teal-100 relative inline-block">
+          Login
+          <span className="absolute left-1/2 bottom-px  h-1 w-full -translate-x-1/2 overflow-hidden">
+            <span className="absolute left-1/2 h-full w-0 -translate-x-1/2 bg-green-50 animate-underline" />
+          </span>
+        </p>
         <div className="group">
-          <input required="true" className="main-input" type="text" />
+          <input
+            required
+            className="main-input"
+            type="text"
+            value={userData.email}
+            onChange={(e) =>
+              setUserData({
+                ...userData,
+                email: e.target.value,
+              })
+            }
+          />
           <span className="highlight-span" />
           <label className="lebal-email">Email</label>
         </div>
         <div className="container-1">
           <div className="group">
-            <input required="true" className="main-input" type="text" />
+            <input
+              required
+              className="main-input"
+              type="password"
+              value={userData.password}
+              onChange={(e) =>
+                setUserData({
+                  ...userData,
+                  password: e.target.value,
+                })
+              }
+            />
             <span className="highlight-span" />
             <label className="lebal-email">password</label>
           </div>
         </div>
-        <button className="submit">submit</button>
+        <button className="bg-white/10 backdrop-blur-lg  
+        py-3 mt-8 w-[70%] cursor-pointer rounded-lg 
+        text-lg font-['Black_Ops_One'] hover:text-teal-900
+         text-teal-50 transition duration-700
+          hover:bg-white/90">submit</button>
       </form>
     </StyledWrapper>
   );
-}
+};
 
 const StyledWrapper = styled.div`
   .group {
@@ -42,23 +102,14 @@ const StyledWrapper = styled.div`
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    border: 1px solid white;
-    padding: 120px 40px;
-    padding-top: 60px;
-    padding-bottom: 90px;
-    padding-right: 40px;
-    padding-left: 40px;
-    background-color: black;
-    border-radius: 20px;
     position: relative;
   }
 
   .form p {
     padding-bottom: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: .5px;
-    color: white;
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: 1px;
   }
 
   .container-1 {
@@ -126,10 +177,7 @@ const StyledWrapper = styled.div`
     }
   }
 
-  .submit {
-    margin-top: 1.2rem;
-    padding: 10px 20px;
-    border-radius: 10px;
-  }`;
 
-export default loginForm;
+`;
+
+export default LoginForm;
