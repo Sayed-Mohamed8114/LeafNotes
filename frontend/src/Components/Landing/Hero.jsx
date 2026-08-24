@@ -10,7 +10,7 @@ export default function Hero() {
     isLoading(true);
     setTimeout(() => {
       isLoading(false);
-      navigate("/login");
+      navigate("/register");
     }, 1500);
   };
 
