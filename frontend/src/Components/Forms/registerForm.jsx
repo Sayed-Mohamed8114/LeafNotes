@@ -1,22 +1,142 @@
+import { register } from "@/Services/User";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const registerForm = () => {
-  return (
-    <StyledWrapper>
-      <form className="form">
-        <p>Sign Up</p>
+const RegisterForm = () => {
+  const navigate = useNavigate();
 
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    if (userData.password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await register(userData);
+
+      console.log(response);
+
+      setSuccess("Account created successfully!");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    } catch (error) {
+      console.error(error);
+
+      setError(
+        error.response?.data?.detail ||
+          "Registration failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <StyledWrapper className="w-[50%] h-full">
+      <form className="form" onSubmit={handleSubmit}>
+        <p className="title">
+          Sign Up
+
+          <span className="underline-wrapper">
+            <span className="underline" />
+          </span>
+        </p>
+
+        {error && <div className="error-message">{error}</div>}
+
+        {success && <div className="success-message">{success}</div>}
+
+        {/* Username */}
         <div className="group">
-          <input required className="main-input" type="text" name="userName" />
+          <input
+            required
+            className="main-input"
+            type="text"
+            name="name"
+            value={userData.name}
+            onChange={(e) =>
+              setUserData({
+                ...userData,
+                name: e.target.value,
+              })
+            }
+          />
+
           <span className="highlight-span" />
-          <label className="label-email">Username</label>
+
+          <label className="label-email">
+            Username
+          </label>
         </div>
 
+        {/* Email */}
         <div className="container-1">
           <div className="group">
-            <input required className="main-input" type="email" name="email" />
+            <input
+              required
+              className="main-input"
+              type="email"
+              name="email"
+              value={userData.email}
+              onChange={(e) =>
+                setUserData({
+                  ...userData,
+                  email: e.target.value,
+                })
+              }
+            />
+
             <span className="highlight-span" />
-            <label className="label-email">Email</label>
+
+            <label className="label-email">
+              Email
+            </label>
+          </div>
+        </div>
+
+        {/* Password */}
+        <div className="container-1">
+          <div className="group">
+            <input
+              required
+              className="main-input"
+              type="password"
+              name="password"
+              value={userData.password}
+              onChange={(e) =>
+                setUserData({
+                  ...userData,
+                  password: e.target.value,
+                })
+              }
+            />
+
+            <span className="highlight-span" />
+
+            <label className="label-email">
+              Password
+            </label>
           </div>
         </div>
 
@@ -26,15 +146,27 @@ const registerForm = () => {
               required
               className="main-input"
               type="password"
-              name="password"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) =>
+                setConfirmPassword(e.target.value)
+              }
             />
+
             <span className="highlight-span" />
-            <label className="label-email">Password</label>
+
+            <label className="label-email">
+              Confirm Password
+            </label>
           </div>
         </div>
 
-        <button className="submit" type="submit">
-          Sign Up
+        <button
+          className="submit"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? "Creating account..." : "Sign Up"}
         </button>
       </form>
     </StyledWrapper>
@@ -42,29 +174,85 @@ const registerForm = () => {
 };
 
 const StyledWrapper = styled.div`
-  .group {
-    position: relative;
-  }
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   .form {
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
-    border: 1px solid white;
     padding: 60px 40px 90px;
-    background-color: black;
-    border-radius: 20px;
+    background: transparent;
     position: relative;
+    backdrop-filter: blur(10px);
   }
 
-  .form p {
-    padding-bottom: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-    color: white;
+  .title {
+    position: relative;
+
+    margin-bottom: 40px;
+
+    color: #ccfbf1;
+
+    font-family: "Black Ops One", sans-serif;
+
+    font-size: 40px;
+
+    font-weight: 500;
+
+    letter-spacing: 1px;
+  }
+
+  .underline-wrapper {
+    position: absolute;
+
+    left: 50%;
+
+    bottom: -8px;
+
+    width: 100%;
+
+    height: 4px;
+
+    transform: translateX(-50%);
+
+    overflow: hidden;
+  }
+
+  .underline {
+    position: absolute;
+
+    left: 50%;
+
+    width: 100%;
+
+    height: 100%;
+
+    transform: translateX(-50%);
+
+    background: #f0fdf4;
+
+    animation: underline-animation 1.2s ease-in-out infinite alternate;
+  }
+
+  @keyframes underline-animation {
+    from {
+      width: 20%;
+    }
+
+    to {
+      width: 100%;
+    }
+  }
+
+  .group {
+    position: relative;
   }
 
   .container-1 {
@@ -73,45 +261,68 @@ const StyledWrapper = styled.div`
 
   .main-input {
     font-size: 16px;
+
     padding: 10px 10px 10px 5px;
+
     display: block;
-    width: 185px;
+
+    width: 220px;
+
     border: none;
+
     border-bottom: 1px solid #6c6c6c;
+
     background: transparent;
+
     color: #ffffff;
   }
 
   .main-input:focus {
     outline: none;
+
     border-bottom-color: #42ff1c;
   }
 
   .label-email {
     color: #999999;
+
     font-size: 18px;
+
     font-weight: normal;
+
     position: absolute;
+
     pointer-events: none;
+
     left: 5px;
+
     top: 10px;
+
     transition: 0.2s ease all;
   }
 
   .main-input:focus ~ .label-email,
   .main-input:valid ~ .label-email {
     top: -20px;
+
     font-size: 14px;
+
     color: #42ff1c;
   }
 
   .highlight-span {
     position: absolute;
+
     height: 60%;
+
     width: 0;
+
     top: 25%;
+
     left: 0;
+
     pointer-events: none;
+
     opacity: 0.5;
   }
 
@@ -125,16 +336,71 @@ const StyledWrapper = styled.div`
     }
 
     to {
-      width: 185px;
+      width: 220px;
     }
   }
 
   .submit {
-    margin-top: 1.2rem;
-    padding: 10px 20px;
+    margin-top: 35px;
+
+    width: 70%;
+
+    padding: 12px 20px;
+
     border-radius: 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
     cursor: pointer;
+
+    color: #f0fdfa;
+
+    font-family: "Black Ops One", sans-serif;
+
+    font-size: 18px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(10px);
+
+    transition: all 0.7s ease;
+  }
+
+  .submit:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.9);
+
+    color: #134e4a;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 25px rgba(13, 148, 136, 0.15);
+  }
+
+  .submit:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.5;
+  }
+
+  .error-message {
+    color: #ff6b6b;
+
+    margin-bottom: 15px;
+
+    text-align: center;
+
+    font-size: 14px;
+  }
+
+  .success-message {
+    color: #42ff1c;
+
+    margin-bottom: 15px;
+
+    text-align: center;
+
+    font-size: 14px;
   }
 `;
 
-export default registerForm;
+export default RegisterForm;
