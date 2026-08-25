@@ -2,7 +2,7 @@ import { addNewTodo } from "@/Services/ToDos";
 import { useState } from "react";
 import styled from "styled-components";
 
-export default function AddTodoForm() {
+export default function AddTodoForm({ontodoAdded}) {
   const [todo_data, setTodoData] = useState({
     title: "",
     description: "",
@@ -13,6 +13,7 @@ export default function AddTodoForm() {
     try {
       const data = await addNewTodo(todo_data);
       console.log(data);
+      ontodoAdded(data)
       setTodoData({
         title: "",
         description: "",
@@ -24,10 +25,10 @@ export default function AddTodoForm() {
   };
 
   return (
-    <StyledWrapper className="h-full w-[40%] p-0 m-0 bg-white/15 rounded-2xl backdrop-blur-2xl">
+    <StyledWrapper className="h-[80%] mb-5 w-full p-0 m-0 bg-white/10 rounded-2xl backdrop-blur-2xl">
       <form
         className="form
-      px-20 py-10 rounded-2xl  h-full
+      px-20 py-10 rounded-2xl h-full
       "
         onSubmit={addTodo}
       >
@@ -77,7 +78,7 @@ export default function AddTodoForm() {
           <div className="group">
             <input
               required
-              className="main-input text-teal-50"
+              className="main-input text-teal-50 placeholder:text-white"
               type="date"
               
               value={todo_data.due_date}
@@ -92,9 +93,10 @@ export default function AddTodoForm() {
             <span className="highlight-span" />
           </div>
         </div>
+
         <button
-          className="bg-white/10 backdrop-blur-lg  
-        py-3 mt-8 w-[70%] cursor-pointer rounded-lg 
+          className="bg-teal-500 backdrop-blur-lg  
+        py-3 mt-8 w-full cursor-pointer rounded-lg 
         text-lg font-['Black_Ops_One'] hover:text-teal-900
          text-teal-50 transition duration-700
           hover:bg-white/90"

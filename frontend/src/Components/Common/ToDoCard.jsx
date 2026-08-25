@@ -1,4 +1,4 @@
-const Card = ({ todo }) => {
+const Card = ({ todo, onDelete, onEdit, onDone }) => {
   return (
     <div
       className="relative flex justify-center items-center h-100 w-60 border-4 border-black rounded-2xl bg-teal-50"
@@ -12,7 +12,7 @@ const Card = ({ todo }) => {
             {todo.title}
           </h2>
 
-          <p className="mt-3 text-sm text-gray-500 text-center">
+          <p className="mt-3 text-sm text-gray-500 text-center line-clamp-6">
             {todo.description}
           </p>
         </div>
@@ -33,6 +33,7 @@ const Card = ({ todo }) => {
           </div>
           <div className="flex items-center justify-between w-full mt-1 gap-1">
             <button
+              onClick={onEdit}
               className="py-2 px-3 bg-teal-500  rounded-md font-extrabold text-md
              hover:bg-yellow-700 text-white cursor-pointer 
              transition-colors duration-700 "
@@ -40,18 +41,24 @@ const Card = ({ todo }) => {
               Edit
             </button>
             <button
-              className="py-2 px-3 bg-red-500 rounded-md font-extrabold text-md
-             hover:bg-red-700 hover:text-teal-50 cursor-pointer 
+              onClick={onDelete}
+              className="py-2 px-3 bg-red-700 rounded-md font-extrabold text-md
+             hover:bg-red-900 text-white cursor-pointer 
              transition-colors duration-700"
             >
               Delete
             </button>
             <button
-              className="py-2 px-3 bg-green-500 rounded-md font-extrabold text-md
-             hover:bg-green-700 hover:text-teal-50 cursor-pointer 
-             transition-colors duration-700"
+              onClick={onDone}
+              disabled={todo.completed}
+              className={`py-2 px-3 rounded-md font-extrabold text-md text-white transition-colors duration-700
+    ${
+      todo.completed
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-green-700 hover:bg-green-900 cursor-pointer"
+    }`}
             >
-              Done
+              {todo.completed ? "Done ✓" : "Done"}
             </button>
           </div>
         </div>
