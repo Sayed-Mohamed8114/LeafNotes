@@ -50,15 +50,14 @@ const Card = ({ todo, onDelete, onEdit, onDone }) => {
             </button>
             <button
               onClick={onDone}
-              disabled={todo.completed}
               className={`py-2 px-3 rounded-md font-extrabold text-md text-white transition-colors duration-700
     ${
       todo.completed
-        ? "bg-gray-400 cursor-not-allowed"
+        ? "bg-gray-800 cursor-pointer"
         : "bg-green-700 hover:bg-green-900 cursor-pointer"
     }`}
             >
-              {todo.completed ? "Done ✓" : "Done"}
+              {todo.completed ? "Undo" : "Done"}
             </button>
           </div>
         </div>
