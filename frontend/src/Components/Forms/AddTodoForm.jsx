@@ -1,43 +1,38 @@
-import { useAuth } from "@/Context/AurhContext";
-import { login } from "@/Services/User";
+import { addNewTodo } from "@/Services/ToDos";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const LoginForm = () => {
-  const { login: saveToken } = useAuth();
-  const navigate = useNavigate();
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
+export default function AddTodoForm() {
+  const [todo_data, setTodoData] = useState({
+    title: "",
+    description: "",
+    due_date: "",
   });
-
-  const handleLogin = async (e) => {
+  const addTodo = async (e) => {
     e.preventDefault();
     try {
-      const response = await login(userData);
-      console.log(response);
-      saveToken(response.access_token);
-      setUserData({
-        email: "",
-        password: "",
+      const data = await addNewTodo(todo_data);
+      console.log(data);
+      setTodoData({
+        title: "",
+        description: "",
+        due_date: "",
       });
-      navigate("/todos")
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <StyledWrapper className="h-full w-[50%] p-0 m-0">
+    <StyledWrapper className="h-full w-[40%] p-0 m-0 bg-white/15 rounded-2xl backdrop-blur-2xl">
       <form
         className="form
-      px-20 py-10 rounded-2xl mt-5  h-full
+      px-20 py-10 rounded-2xl  h-full
       "
-        onSubmit={handleLogin}
+        onSubmit={addTodo}
       >
         <p className="font-['Black_Ops_One'] mb-10 text-teal-100 relative inline-block">
-          Login
+          Add Todo
           <span className="absolute left-1/2 bottom-px  h-1 w-full -translate-x-1/2 overflow-hidden">
             <span className="absolute left-1/2 h-full w-0 -translate-x-1/2 bg-green-50 animate-underline" />
           </span>
@@ -47,44 +42,69 @@ const LoginForm = () => {
             required
             className="main-input"
             type="text"
-            value={userData.email}
+            value={todo_data.title}
             onChange={(e) =>
-              setUserData({
-                ...userData,
-                email: e.target.value,
+              setTodoData({
+                ...todo_data,
+                title: e.target.value,
               })
             }
           />
           <span className="highlight-span" />
-          <label className="lebal-email">Email</label>
+          <label className="lebal-email">Title</label>
         </div>
+
         <div className="container-1">
           <div className="group">
             <input
               required
               className="main-input"
-              type="password"
-              value={userData.password}
+              type="text"
+              value={todo_data.description}
               onChange={(e) =>
-                setUserData({
-                  ...userData,
-                  password: e.target.value,
+                setTodoData({
+                  ...todo_data,
+                  description: e.target.value,
                 })
               }
             />
             <span className="highlight-span" />
-            <label className="lebal-email">password</label>
+            <label className="lebal-email">Description</label>
           </div>
         </div>
-        <button className="bg-white/10 backdrop-blur-lg  
+        
+        <div className="container-1">
+          <div className="group">
+            <input
+              required
+              className="main-input text-teal-50"
+              type="date"
+              
+              value={todo_data.due_date}
+              onChange={(e) =>
+                setTodoData({
+                  ...todo_data,
+                  due_date: e.target.value,
+                  
+                })
+              }
+            />
+            <span className="highlight-span" />
+          </div>
+        </div>
+        <button
+          className="bg-white/10 backdrop-blur-lg  
         py-3 mt-8 w-[70%] cursor-pointer rounded-lg 
         text-lg font-['Black_Ops_One'] hover:text-teal-900
          text-teal-50 transition duration-700
-          hover:bg-white/90">submit</button>
+          hover:bg-white/90"
+        >
+          submit
+        </button>
       </form>
     </StyledWrapper>
   );
-};
+}
 
 const StyledWrapper = styled.div`
   .group {
@@ -179,8 +199,4 @@ const StyledWrapper = styled.div`
       width: 185px;
     }
   }
-
-
 `;
-
-export default LoginForm;

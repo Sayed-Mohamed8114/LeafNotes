@@ -3,6 +3,7 @@ import MainLayout from "@/Components/Layout/MainLayout";
 import Landing from "../Pages/Landing/Landing";
 import LoginPage from "@/Pages/Login/LoginPage";
 import RegisterPage from "@/Pages/Register/RegisterPage";
+import ToDoPage from "@/Pages/ToDoPage/ToDoPage";
 
 export default function AppRouter() {
   return (
@@ -13,6 +14,7 @@ export default function AppRouter() {
         </Route>
         <Route path={"/login"} element={<LoginPage />} />
         <Route path={"/register"} element={<RegisterPage />} />
+        <Route path={"/todos"} element={<ToDoPage />} />
       </Routes>
     </BrowserRouter>
   );

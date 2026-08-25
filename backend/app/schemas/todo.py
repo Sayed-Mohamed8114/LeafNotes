@@ -11,7 +11,7 @@ class TodoResponse(BaseModel):
     title:str 
     description: str | None = None 
     due_date : datetime | None = None 
-    completed : bool 
+    completed : bool
 
     model_config = ConfigDict(from_attributes=True)
 
