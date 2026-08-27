@@ -12,11 +12,10 @@ export default function AddTodoForm({ontodoAdded}) {
     e.preventDefault();
     try {
       const data = await addNewTodo(todo_data);
-      console.log(data);
-      ontodoAdded(data)
+       ontodoAdded(data)
       setTodoData({
-        title: "",
-        description: "",
+        title: "", 
+        description: "", 
         due_date: "",
       });
     } catch (error) {

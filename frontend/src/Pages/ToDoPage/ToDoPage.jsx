@@ -14,9 +14,7 @@ export default function ToDoPage() {
   const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  // =========================
   // Get current user
-  // =========================
   const getUser = async () => {
     try {
       const data = await getMe();
@@ -26,9 +24,7 @@ export default function ToDoPage() {
     }
   };
 
-  // =========================
   // Get all todos
-  // =========================
   const getTodos = async () => {
     setLoading(true);
 
@@ -42,9 +38,7 @@ export default function ToDoPage() {
     }
   };
 
-  // =========================
   // Mark todo as done / undo
-  // =========================
   const handleDoneTodo = async (todo_id, completed) => {
     try {
       const updatedTodo = await updateTodo(todo_id, {
@@ -229,9 +223,6 @@ export default function ToDoPage() {
         `}
       />
 
-      {/* =========================
-          Add Todo Drawer
-      ========================== */}
       <div
         className={`
           fixed
