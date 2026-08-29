@@ -255,11 +255,11 @@ export default function ToDoPage() {
           className="
             absolute
             right-4
-            top-3
+            top-5
             text-gray-400
-            text-2xl
+            text-4xl mr-5
             hover:text-white
-            cursor-pointer
+            cursor-pointer z-10 
           "
         >
           ×

@@ -2,7 +2,7 @@ import { addNewTodo } from "@/Services/ToDos";
 import { useState } from "react";
 import styled from "styled-components";
 
-export default function AddTodoForm({ontodoAdded}) {
+export default function AddTodoForm({ onTodoAdded }) {
   const [todo_data, setTodoData] = useState({
     title: "",
     description: "",
@@ -12,12 +12,12 @@ export default function AddTodoForm({ontodoAdded}) {
     e.preventDefault();
     try {
       const data = await addNewTodo(todo_data);
-       ontodoAdded(data)
       setTodoData({
-        title: "", 
-        description: "", 
+        title: "",
+        description: "",
         due_date: "",
       });
+      onTodoAdded(data);
     } catch (error) {
       console.error(error);
     }
@@ -72,20 +72,18 @@ export default function AddTodoForm({ontodoAdded}) {
             <label className="lebal-email">Description</label>
           </div>
         </div>
-        
+
         <div className="container-1">
           <div className="group">
             <input
               required
               className="main-input text-teal-50 placeholder:text-white"
               type="date"
-              
               value={todo_data.due_date}
               onChange={(e) =>
                 setTodoData({
                   ...todo_data,
                   due_date: e.target.value,
-                  
                 })
               }
             />
@@ -94,6 +92,7 @@ export default function AddTodoForm({ontodoAdded}) {
         </div>
 
         <button
+          type="submit"
           className="bg-teal-500 backdrop-blur-lg  
         py-3 mt-8 w-full cursor-pointer rounded-lg 
         text-lg font-['Black_Ops_One'] hover:text-teal-900
