@@ -13,6 +13,7 @@ export default function ToDoPage() {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const[editTodo , setEditTodo] = useState(null);
 
   // Get current user
   const getUser = async () => {
@@ -55,14 +56,14 @@ export default function ToDoPage() {
     }
   };
 
-  
+  // handle add new task
   const handleTodoAdded = (newTodo) => {
     setTodos((prevTodos) => [newTodo, ...prevTodos]);
 
     setIsOpen(false);
   };
 
-
+  // handle delete task or todo 
   const handleDelete = async (todo_id) => {
     try {
       await deleteTodo(todo_id);
@@ -74,6 +75,25 @@ export default function ToDoPage() {
       console.error(error);
     }
   };
+
+  //handle edit todo 
+  const handleEdit = async (todo)=> {
+    setEditTodo(todo);
+    setIsOpen(true);
+  }
+
+  const handleTodoUpdate = (updatedTodo) => {
+  setTodos((prevTodos) =>
+    prevTodos.map((todo) =>
+      todo.id === updatedTodo.id
+        ? updatedTodo
+        : todo
+    )
+  );
+
+  setEditTodo(null);
+  setIsOpen(false);
+};
 
   // Load data when page opens
   useEffect(() => {
@@ -87,9 +107,7 @@ export default function ToDoPage() {
 
   return (
     <div className="bg-gray-900 w-full min-h-screen h-auto">
-
       <div className="flex flex-col justify-center items-center">
-
         <div
           className="
             px-2
@@ -127,7 +145,6 @@ export default function ToDoPage() {
               {" " + Capitalize}
             </span>
           </h2>
-
           <h2
             className="
               text-teal-200
@@ -170,6 +187,7 @@ export default function ToDoPage() {
               <Card
                 key={todo.id}
                 todo={todo}
+                onEdit={()=>handleEdit(todo)}
                 onDone={() =>
                   handleDoneTodo(todo.id, todo.completed)
                 }
@@ -230,7 +248,7 @@ export default function ToDoPage() {
           top-20
           z-50
           h-auto
-          w-[480px]
+          w-120
           max-w-[90%]
           rounded-l-2xl
           bg-gray-900
@@ -268,6 +286,8 @@ export default function ToDoPage() {
         {/* Form */}
         <AddTodoForm
           onTodoAdded={handleTodoAdded}
+          oneditingTodo={editTodo}
+          onTodoUpdate={handleTodoUpdate}
         />
 
         {/* Cancel button */}

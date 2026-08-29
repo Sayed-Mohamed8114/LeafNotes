@@ -1,8 +1,12 @@
-import { addNewTodo } from "@/Services/ToDos";
-import { useState } from "react";
+import { addNewTodo, updateTodo } from "@/Services/ToDos";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-export default function AddTodoForm({ onTodoAdded }) {
+export default function AddTodoForm({
+  onTodoAdded,
+  oneditingTodo,
+  onTodoUpdate,
+}) {
   const [todo_data, setTodoData] = useState({
     title: "",
     description: "",
@@ -11,17 +15,38 @@ export default function AddTodoForm({ onTodoAdded }) {
   const addTodo = async (e) => {
     e.preventDefault();
     try {
-      const data = await addNewTodo(todo_data);
+      if (oneditingTodo) {
+        const updatedTodo = await updateTodo(oneditingTodo.id, todo_data);
+        onTodoUpdate(updatedTodo);
+      } else {
+        const data = await addNewTodo(todo_data);
+        setTodoData({
+          title: "",
+          description: "",
+          due_date: "",
+        });
+        onTodoAdded(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (oneditingTodo) {
+      setTodoData({
+        title: oneditingTodo.title || "",
+        description: oneditingTodo.description || "",
+        due_date: oneditingTodo.due_date || "",
+      });
+    } else {
       setTodoData({
         title: "",
         description: "",
         due_date: "",
       });
-      onTodoAdded(data);
-    } catch (error) {
-      console.error(error);
     }
-  };
+  }, [oneditingTodo]);
 
   return (
     <StyledWrapper className="h-[80%] mb-5 w-full p-0 m-0 bg-white/10 rounded-2xl backdrop-blur-2xl">
@@ -32,7 +57,7 @@ export default function AddTodoForm({ onTodoAdded }) {
         onSubmit={addTodo}
       >
         <p className="font-['Black_Ops_One'] mb-10 text-teal-100 relative inline-block">
-          Add Todo
+          {oneditingTodo ? "Edit Todo" : "Add Todo"}
           <span className="absolute left-1/2 bottom-px  h-1 w-full -translate-x-1/2 overflow-hidden">
             <span className="absolute left-1/2 h-full w-0 -translate-x-1/2 bg-green-50 animate-underline" />
           </span>
@@ -99,7 +124,7 @@ export default function AddTodoForm({ onTodoAdded }) {
          text-teal-50 transition duration-700
           hover:bg-white/90"
         >
-          submit
+          {oneditingTodo ? "Update" : "Submit"}
         </button>
       </form>
     </StyledWrapper>
