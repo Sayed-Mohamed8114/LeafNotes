@@ -1,6 +1,8 @@
+
 import { register } from "@/Services/User";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import styled from "styled-components";
 
 const RegisterForm = () => {
@@ -13,29 +15,37 @@ const RegisterForm = () => {
   });
 
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setError("");
-    setSuccess("");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    // Password confirmation
     if (userData.password !== confirmPassword) {
-      setError("Passwords do not match");
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    // Password length
+    if (userData.password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+
+    // Email validation
+    if (!emailRegex.test(userData.email)) {
+      toast.error("Please enter a valid email address");
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await register(userData);
+      await register(userData);
 
-      console.log(response);
-
-      setSuccess("Account created successfully!");
+      toast.success("Account created successfully!");
 
       setTimeout(() => {
         navigate("/login");
@@ -43,7 +53,7 @@ const RegisterForm = () => {
     } catch (error) {
       console.error(error);
 
-      setError(
+      toast.error(
         error.response?.data?.detail ||
           "Registration failed. Please try again."
       );
@@ -53,7 +63,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <StyledWrapper className="w-[50%] h-full">
+    <StyledWrapper>
       <form className="form" onSubmit={handleSubmit}>
         <p className="title">
           Sign Up
@@ -62,10 +72,6 @@ const RegisterForm = () => {
             <span className="underline" />
           </span>
         </p>
-
-        {error && <div className="error-message">{error}</div>}
-
-        {success && <div className="success-message">{success}</div>}
 
         {/* Username */}
         <div className="group">
@@ -120,6 +126,7 @@ const RegisterForm = () => {
           <div className="group">
             <input
               required
+              minLength={8}
               className="main-input"
               type="password"
               name="password"
@@ -140,6 +147,7 @@ const RegisterForm = () => {
           </div>
         </div>
 
+        {/* Confirm Password */}
         <div className="container-1">
           <div className="group">
             <input
@@ -166,7 +174,9 @@ const RegisterForm = () => {
           type="submit"
           disabled={loading}
         >
-          {loading ? "Creating account..." : "Sign Up"}
+          {loading
+            ? "Creating account..."
+            : "Sign Up"}
         </button>
       </form>
     </StyledWrapper>
@@ -195,49 +205,31 @@ const StyledWrapper = styled.div`
 
   .title {
     position: relative;
-
     margin-bottom: 40px;
-
     color: #ccfbf1;
-
     font-family: "Black Ops One", sans-serif;
-
     font-size: 40px;
-
     font-weight: 500;
-
     letter-spacing: 1px;
   }
 
   .underline-wrapper {
     position: absolute;
-
     left: 50%;
-
     bottom: -8px;
-
     width: 100%;
-
     height: 4px;
-
     transform: translateX(-50%);
-
     overflow: hidden;
   }
 
   .underline {
     position: absolute;
-
     left: 50%;
-
     width: 100%;
-
     height: 100%;
-
     transform: translateX(-50%);
-
     background: #f0fdf4;
-
     animation: underline-animation 1.2s ease-in-out infinite alternate;
   }
 
@@ -261,68 +253,45 @@ const StyledWrapper = styled.div`
 
   .main-input {
     font-size: 16px;
-
     padding: 10px 10px 10px 5px;
-
     display: block;
-
     width: 220px;
-
     border: none;
-
     border-bottom: 1px solid #6c6c6c;
-
     background: transparent;
-
     color: #ffffff;
   }
 
   .main-input:focus {
     outline: none;
-
     border-bottom-color: #42ff1c;
   }
 
   .label-email {
     color: #999999;
-
     font-size: 18px;
-
     font-weight: normal;
-
     position: absolute;
-
     pointer-events: none;
-
     left: 5px;
-
     top: 10px;
-
     transition: 0.2s ease all;
   }
 
   .main-input:focus ~ .label-email,
   .main-input:valid ~ .label-email {
     top: -20px;
-
     font-size: 14px;
-
     color: #42ff1c;
   }
 
   .highlight-span {
     position: absolute;
-
     height: 60%;
-
     width: 0;
-
     top: 25%;
-
     left: 0;
-
     pointer-events: none;
-
     opacity: 0.5;
   }
 
@@ -342,65 +311,31 @@ const StyledWrapper = styled.div`
 
   .submit {
     margin-top: 35px;
-
     width: 70%;
-
     padding: 12px 20px;
-
     border-radius: 10px;
-
     border: 1px solid rgba(255, 255, 255, 0.1);
-
     cursor: pointer;
-
     color: #f0fdfa;
-
     font-family: "Black Ops One", sans-serif;
-
     font-size: 18px;
-
     background: rgba(255, 255, 255, 0.08);
-
     backdrop-filter: blur(10px);
-
     transition: all 0.7s ease;
   }
 
   .submit:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.9);
-
     color: #134e4a;
-
     transform: translateY(-2px);
-
     box-shadow: 0 10px 25px rgba(13, 148, 136, 0.15);
   }
 
   .submit:disabled {
     cursor: not-allowed;
-
     opacity: 0.5;
-  }
-
-  .error-message {
-    color: #ff6b6b;
-
-    margin-bottom: 15px;
-
-    text-align: center;
-
-    font-size: 14px;
-  }
-
-  .success-message {
-    color: #42ff1c;
-
-    margin-bottom: 15px;
-
-    text-align: center;
-
-    font-size: 14px;
   }
 `;
 
 export default RegisterForm;
+

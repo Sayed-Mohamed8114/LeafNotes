@@ -1,9 +1,9 @@
-from pydantic import BaseModel ,ConfigDict
+from pydantic import BaseModel ,ConfigDict , EmailStr , Field
 
 class UserCreate(BaseModel):
     name:str 
-    email:str 
-    password:str 
+    email:EmailStr 
+    password:str = Field(min_length=8 , max_length=20) 
 
 class UserResponse(BaseModel):
     id:int 

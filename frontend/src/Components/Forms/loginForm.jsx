@@ -3,6 +3,7 @@ import { login } from "@/Services/User";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import {toast} from 'sonner';
 
 const LoginForm = () => {
   const { login: saveToken } = useAuth();
@@ -16,7 +17,7 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await login(userData);
-      console.log(response);
+      toast.success("signed in correctly");
       saveToken(response.access_token);
       setUserData({
         email: "",
@@ -24,7 +25,9 @@ const LoginForm = () => {
       });
       navigate("/todos")
     } catch (error) {
-      console.error(error);
+      toast.error(
+        error.response?.data?.detail || "invalid email or password"
+      )
     }
   };
 
