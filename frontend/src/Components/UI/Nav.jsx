@@ -29,14 +29,14 @@ export default function Nav() {
         </div>
       )}
 
-      <nav className="mt-5 bg-white/15 rounded-2xl w-[70%] h-[7vh] flex items-center justify-between px-5">
+      <nav className="mt-5 bg-white/15 rounded-2xl w-[90%] md:w-[70%]  h-[7vh] flex items-center justify-between px-5">
         <div className="flex items-center justify-start">
-          <img src={leaf} className="w-20 h-15" />
+          <img src={leaf} className="w-15 h-10 md:w-20 md:h-15" />
           <a onClick={handleGoHome} className="z-10 cursor-pointer">
             <h1 className="font-['Black_Ops_One'] text-xl ">Leaf-Note</h1>
           </a>
         </div>
-        <div className="flex items-center justify-between gap-5 z-10">
+        <div className="flex items-center justify-between gap-3 md:gap-5 z-10">
           <a href="https://github.com/Sayed-Mohamed8114" target="_blank">
             <Button color={"oklch(44.2% 0.017 285.786)"} type={"github"} />
           </a>
@@ -47,8 +47,9 @@ export default function Nav() {
             <Button type={"linkedin"} />
           </a>
         </div>
-        <button onClick={handleGoLogin}
-          className="bg-teal-200/50 px-5 py-3 rounded-md  font-['Black_Ops_One'] text-xl text-gray-900 cursor-pointer transition duration-700 *:
+        <button
+          onClick={handleGoLogin}
+          className="bg-teal-200/50 md:px-5 px-3 py-2 md:py-3  rounded-md  font-['Black_Ops_One'] text-xl text-gray-900 cursor-pointer transition duration-700 *:
       hover:bg-teal-200/30 hover:text-teal-50
       "
         >
