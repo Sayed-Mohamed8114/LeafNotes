@@ -1,10 +1,6 @@
 import Card from "@/Components/Common/ToDoCard";
 import AddTodoForm from "@/Components/Forms/AddTodoForm";
-import {
-  deleteTodo,
-  getUserTodos,
-  updateTodo,
-} from "@/Services/ToDos";
+import { deleteTodo, getUserTodos, updateTodo } from "@/Services/ToDos";
 import { getMe } from "@/Services/User";
 import { useEffect, useState } from "react";
 
@@ -13,7 +9,7 @@ export default function ToDoPage() {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const[editTodo , setEditTodo] = useState(null);
+  const [editTodo, setEditTodo] = useState(null);
 
   // Get current user
   const getUser = async () => {
@@ -47,9 +43,7 @@ export default function ToDoPage() {
       });
 
       setTodos((prevTodos) =>
-        prevTodos.map((todo) =>
-          todo.id === todo_id ? updatedTodo : todo
-        )
+        prevTodos.map((todo) => (todo.id === todo_id ? updatedTodo : todo)),
       );
     } catch (error) {
       console.error(error);
@@ -63,37 +57,34 @@ export default function ToDoPage() {
     setIsOpen(false);
   };
 
-  // handle delete task or todo 
+  // handle delete task or todo
   const handleDelete = async (todo_id) => {
     try {
       await deleteTodo(todo_id);
 
-      setTodos((prevTodos) =>
-        prevTodos.filter((todo) => todo.id !== todo_id)
-      );
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== todo_id));
     } catch (error) {
       console.error(error);
     }
   };
 
-  //handle edit todo 
-  const handleEdit = async (todo)=> {
+  //handle edit todo
+  const handleEdit = async (todo) => {
     setEditTodo(todo);
     setIsOpen(true);
-  }
+  };
 
+  //handel update todo
   const handleTodoUpdate = (updatedTodo) => {
-  setTodos((prevTodos) =>
-    prevTodos.map((todo) =>
-      todo.id === updatedTodo.id
-        ? updatedTodo
-        : todo
-    )
-  );
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === updatedTodo.id ? updatedTodo : todo,
+      ),
+    );
 
-  setEditTodo(null);
-  setIsOpen(false);
-};
+    setEditTodo(null);
+    setIsOpen(false);
+  };
 
   // Load data when page opens
   useEffect(() => {
@@ -101,21 +92,22 @@ export default function ToDoPage() {
     getUser();
   }, []);
 
+  // make the user first letter capital
   const Capitalize = user?.name
     ? user.name[0].toUpperCase() + user.name.slice(1)
     : "";
 
   return (
-    <div className="bg-gray-900 w-full min-h-screen h-auto">
+    <div className="bg-gray-900 w-full min-h-screen h-auto ">
       <div className="flex flex-col justify-center items-center">
         <div
           className="
             px-2
-            lg:w-[60%] w-[70%]
+            lg:w-[60%] w-[90%] md:w-[70%]
             rounded-md
             bg-white/10
             backdrop-blur-lg
-            h-[5vh]
+            h-[6vh]
             mt-2
             items-center
             flex
@@ -132,7 +124,6 @@ export default function ToDoPage() {
             "
           >
             Welcome back
-
             <span
               className="
                 text-teal-100
@@ -163,37 +154,31 @@ export default function ToDoPage() {
         </div>
 
         {loading ? (
-          <p className="text-teal-100 mt-10">
-            Loading todos...
-          </p>
+          <p className="text-teal-100 mt-10">Loading todos...</p>
         ) : (
           <div
             className="
-              grid
+              grid 
               grid-cols-1
               sm:grid-cols-2
+              lg:grid-cols-4
+              xl:grid-cols-5
               md:grid-cols-3
-              lg:grid-cols-5
-              gap-5
-              items-center
-              justify-center
+              gap-10
               mt-10
               w-full
-              px-10
-              py-5
+              px-30 md:px-10 lg:px-10 sm:px-10
+              md:py-5
+
             "
           >
             {todos.map((todo) => (
               <Card
                 key={todo.id}
                 todo={todo}
-                onEdit={()=>handleEdit(todo)}
-                onDone={() =>
-                  handleDoneTodo(todo.id, todo.completed)
-                }
-                onDelete={() =>
-                  handleDelete(todo.id)
-                }
+                onEdit={() => handleEdit(todo)}
+                onDone={() => handleDoneTodo(todo.id, todo.completed)}
+                onDelete={() => handleDelete(todo.id)}
               />
             ))}
           </div>
@@ -216,7 +201,8 @@ export default function ToDoPage() {
           cursor-pointer
           hover:bg-teal-800
           transition-colors
-          duration-700
+        animate-bounce
+        hover:shadow-gray-600 duration-1000
         "
       >
         Add New Task
@@ -260,11 +246,7 @@ export default function ToDoPage() {
           duration-500
           ease-in-out
 
-          ${
-            isOpen
-              ? "translate-x-0"
-              : "translate-x-full"
-          }
+          ${isOpen ? "translate-x-0" : "translate-x-full"}
         `}
       >
         {/* Close button */}
