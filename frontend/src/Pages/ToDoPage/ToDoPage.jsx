@@ -163,11 +163,11 @@ export default function ToDoPage() {
               sm:grid-cols-2
               lg:grid-cols-4
               xl:grid-cols-5
-              md:grid-cols-3
+              md:grid-cols-2
               gap-10
               mt-10
               w-full
-              px-30 md:px-10 lg:px-10 sm:px-10
+              px-30 md:px-20 lg:px-10 sm:px-10
               md:py-5
 
             "
