@@ -17,7 +17,7 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await login(userData);
-      toast.success("signed in correctly");
+      toast.success("signed in correctly , redirecting");
       saveToken(response.access_token);
       setUserData({
         email: "",
@@ -32,10 +32,10 @@ const LoginForm = () => {
   };
 
   return (
-    <StyledWrapper className="h-full w-[50%] p-0 m-0">
+    <StyledWrapper className="h-full w-[50%] p-0 m-0 items-center flex justify-center">
       <form
         className="form
-      px-20 py-10 rounded-2xl mt-5  h-full
+      px-20 py-10 rounded-2xl mt-5  h-full 
       "
         onSubmit={handleLogin}
       >

@@ -1,4 +1,3 @@
-
 import { register } from "@/Services/User";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,19 +21,16 @@ const RegisterForm = () => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // Password confirmation
     if (userData.password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
 
-    // Password length
     if (userData.password.length < 8) {
       toast.error("Password must be at least 8 characters");
       return;
     }
 
-    // Email validation
     if (!emailRegex.test(userData.email)) {
       toast.error("Please enter a valid email address");
       return;
@@ -63,17 +59,26 @@ const RegisterForm = () => {
   };
 
   return (
-    <StyledWrapper>
-      <form className="form" onSubmit={handleSubmit}>
-        <p className="title">
+    <StyledWrapper className="h-full w-full md:w-[50%] p-0 m-0 items-center flex justify-center">
+      <form
+        className="form
+        px-10 md:px-20
+        py-10
+        rounded-2xl
+        mt-5
+        h-full
+        w-full
+        "
+        onSubmit={handleSubmit}
+      >
+        <p className="font-['Black_Ops_One'] mb-10 text-teal-100 relative inline-block">
           Sign Up
 
-          <span className="underline-wrapper">
-            <span className="underline" />
+          <span className="absolute left-1/2 bottom-px h-1 w-full -translate-x-1/2 overflow-hidden">
+            <span className="absolute left-1/2 h-full w-0 -translate-x-1/2 bg-green-50 animate-underline" />
           </span>
         </p>
 
-        {/* Username */}
         <div className="group">
           <input
             required
@@ -96,7 +101,6 @@ const RegisterForm = () => {
           </label>
         </div>
 
-        {/* Email */}
         <div className="container-1">
           <div className="group">
             <input
@@ -121,7 +125,6 @@ const RegisterForm = () => {
           </div>
         </div>
 
-        {/* Password */}
         <div className="container-1">
           <div className="group">
             <input
@@ -147,7 +150,6 @@ const RegisterForm = () => {
           </div>
         </div>
 
-        {/* Confirm Password */}
         <div className="container-1">
           <div className="group">
             <input
@@ -174,9 +176,7 @@ const RegisterForm = () => {
           type="submit"
           disabled={loading}
         >
-          {loading
-            ? "Creating account..."
-            : "Sign Up"}
+          {loading ? "Creating account..." : "Sign Up"}
         </button>
       </form>
     </StyledWrapper>
@@ -184,67 +184,36 @@ const RegisterForm = () => {
 };
 
 const StyledWrapper = styled.div`
-  width: 50%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .form {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 60px 40px 90px;
-    background: transparent;
+  .group {
     position: relative;
-    backdrop-filter: blur(10px);
   }
 
-  .title {
+  .form {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+
     position: relative;
-    margin-bottom: 40px;
-    color: #ccfbf1;
-    font-family: "Black Ops One", sans-serif;
+  }
+
+  .form p {
+    padding-bottom: 20px;
     font-size: 40px;
     font-weight: 500;
     letter-spacing: 1px;
-  }
-
-  .underline-wrapper {
-    position: absolute;
-    left: 50%;
-    bottom: -8px;
-    width: 100%;
-    height: 4px;
-    transform: translateX(-50%);
-    overflow: hidden;
-  }
-
-  .underline {
-    position: absolute;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    transform: translateX(-50%);
-    background: #f0fdf4;
-    animation: underline-animation 1.2s ease-in-out infinite alternate;
-  }
-
-  @keyframes underline-animation {
-    from {
-      width: 20%;
-    }
-
-    to {
-      width: 100%;
-    }
-  }
-
-  .group {
-    position: relative;
   }
 
   .container-1 {
@@ -255,7 +224,7 @@ const StyledWrapper = styled.div`
     font-size: 16px;
     padding: 10px 10px 10px 5px;
     display: block;
-    width: 220px;
+    width: 185px;
     border: none;
     border-bottom: 1px solid #6c6c6c;
     background: transparent;
@@ -305,29 +274,38 @@ const StyledWrapper = styled.div`
     }
 
     to {
-      width: 220px;
+      width: 185px;
     }
   }
 
   .submit {
-    margin-top: 35px;
-    width: 70%;
-    padding: 12px 20px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-    color: #f0fdfa;
-    font-family: "Black Ops One", sans-serif;
-    font-size: 18px;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
+
+    padding: 12px 20px;
+    margin-top: 35px;
+
+    width: 70%;
+
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    cursor: pointer;
+
+    color: #f0fdfa;
+
+    font-family: "Black Ops One", sans-serif;
+    font-size: 18px;
+
     transition: all 0.7s ease;
   }
 
   .submit:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.9);
     color: #134e4a;
+
     transform: translateY(-2px);
+
     box-shadow: 0 10px 25px rgba(13, 148, 136, 0.15);
   }
 
@@ -335,7 +313,21 @@ const StyledWrapper = styled.div`
     cursor: not-allowed;
     opacity: 0.5;
   }
+
+  /* Mobile */
+  @media (max-width: 767px) {
+    .form p {
+      font-size: 32px;
+    }
+
+    .container-1 {
+      padding-top: 25px;
+    }
+
+    .main-input {
+      width: 185px;
+    }
+  }
 `;
 
 export default RegisterForm;
-

@@ -24,27 +24,29 @@ export default function LoginPage() {
       )}
 
       <section
-        className="w-full p-10 flex items-center h-screen
+        className="w-full p-10 flex items-center min-h-screen 
         justify-center bg-gray-950 text-teal-50 gap-10"
       >
-        <div className="w-[50%] bg-gray-900/80 p-10 rounded-2xl shadow-teal-900 shadow-xl flex items-center justify-center gap-10 h-[70%]">
+        <div className="w-[99%] lg:w-[50%] bg-gray-900/80 p-10 rounded-2xl
+         shadow-teal-900 shadow-xl flex items-center flex-col-reverse md:flex-row justify-center
+          gap-10 h-auto md:h-[70%] ">
 
-          <div className="h-auto w-[50%] items-center justify-center flex gap-10 flex-col">
+          <div className="h-auto w-full md:w-[50%] items-center justify-center flex gap-10 flex-col">
 
-            <h2 className="font-['Black_Ops_One'] text-5xl">
+            <h2 className="font-['Black_Ops_One'] text-center md:text-start text-2xl md:text-5xl">
               Welcome back to leaf-Note
             </h2>
 
-            <p className="text-teal-200/50 text-lg leading-5 font-semibold">
+            <p className="text-teal-200/50 text-sm text-center md:text-start md:text-lg leading-5 font-semibold">
               leaf note is a simple platform to manage your daily tasks and
               todos made for daily use with good and simple UI/UX.
             </p>
 
-            <div className="mt-10 flex w-full items-center justify-evenly">
+            <div className="mt-2 md:mt-10 flex w-full items-center justify-evenly">
 
               <button
                 onClick={() => handleNavigation("/")}
-                className="text-lg text-teal-300 underline underline-offset-3
+                className="text-sm md:text-lg text-teal-300 underline underline-offset-3
                 hover:text-teal-50 transition duration-700"
               >
                 Back to home?
@@ -52,7 +54,7 @@ export default function LoginPage() {
 
               <button
                 onClick={() => handleNavigation("/register")}
-                className="text-lg text-teal-100 underline underline-offset-3
+                className="text-sm md:text-lg text-teal-100 underline underline-offset-3
                 hover:text-gray-200 transition duration-700"
               >
                 Don't have an account?
